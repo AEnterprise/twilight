@@ -16,11 +16,7 @@
 
 pub mod client;
 pub mod error;
+pub mod prelude;
 pub mod ratelimiting;
 pub mod request;
 pub mod routing;
-
-pub use crate::{
-    client::Client,
-    error::{Error, Result},
-};
