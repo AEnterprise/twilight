@@ -117,6 +117,7 @@ pub enum Path {
     GuildsIdWebhooks(u64),
     InvitesCode,
     UsersId,
+    OauthApplicationsMe,
     UsersIdConnections,
     UsersIdChannels,
     /// Operating on the state of a guild that the user is in.
@@ -206,6 +207,7 @@ impl FromStr for Path {
             ["guilds", id, "vanity-url"] => GuildsIdVanityUrl(id.parse()?),
             ["guilds", id, "webhooks"] => GuildsIdWebhooks(id.parse()?),
             ["invites", _] | ["invite", _] => InvitesCode,
+            ["oauth2", "applications", "@me"] => OauthApplicationsMe,
             ["users", _] => UsersId,
             ["users", _, "connections"] => UsersIdConnections,
             ["users", _, "channels"] => UsersIdChannels,
@@ -476,6 +478,8 @@ pub enum Route {
         /// The ID of the guild.
         guild_id: u64,
     },
+    /// Route information to get info about application the current bot user belongs to
+    GetCurrentUserApplicationInfo,
     /// Route information to get an emoji by ID within a guild.
     GetEmoji {
         /// The ID of the emoji.
@@ -1080,6 +1084,11 @@ impl Route {
                 Method::GET,
                 Path::GuildsIdChannels(guild_id),
                 format!("guilds/{}/channels", guild_id).into(),
+            ),
+            Self::GetCurrentUserApplicationInfo => (
+                Method::GET,
+                Path::OauthApplicationsMe,
+                "/oauth2/applications/@me".into(),
             ),
             Self::GetEmoji { emoji_id, guild_id } => (
                 Method::GET,

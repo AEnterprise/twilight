@@ -3,6 +3,7 @@ mod builder;
 pub use self::builder::ClientBuilder;
 pub use reqwest::Proxy;
 
+use crate::request::GetUserApplicationInfo;
 use crate::{
     api_error::{ApiError, ErrorCode},
     error::{Error, Result, UrlError},
@@ -424,6 +425,11 @@ impl Client {
     /// Get information about the current user.
     pub fn current_user(&self) -> GetCurrentUser<'_> {
         GetCurrentUser::new(self)
+    }
+
+    /// Get information about the current bot application.
+    pub fn current_user_application(&self) -> GetUserApplicationInfo<'_> {
+        GetUserApplicationInfo::new(self)
     }
 
     /// Update the current user.
