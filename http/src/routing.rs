@@ -94,7 +94,6 @@ pub enum Path {
     /// Operating on one of user's guilds.
     GuildsId(u64),
     GuildsIdBans(u64),
-    GuildsIdBansId(u64),
     GuildsIdAuditLogs(u64),
     GuildsIdBansUserId(u64),
     GuildsIdChannels(u64),
@@ -163,6 +162,7 @@ impl FromStr for Path {
             ["channels", id] => ChannelsId(id.parse()?),
             ["channels", id, "invites"] => ChannelsIdInvites(id.parse()?),
             ["channels", id, "messages"] => ChannelsIdMessages(id.parse()?),
+            ["channels", id, "messages", "bulk-delete"] => ChannelsIdMessagesBulkDelete(id.parse()?),
             ["channels", id, "messages", _] => {
                 return Err(PathParseError::MessageIdWithoutMethod {
                     channel_id: id.parse()?,
@@ -184,6 +184,7 @@ impl FromStr for Path {
             ["guilds"] => Guilds,
             ["guilds", id] => GuildsId(id.parse()?),
             ["guilds", id, "bans"] => GuildsIdBans(id.parse()?),
+            ["guilds", id, "audit-logs"] => GuildsIdAuditLogs(id.parse()?),
             ["guilds", id, "bans", _] => GuildsIdBansUserId(id.parse()?),
             ["guilds", id, "channels"] => GuildsIdChannels(id.parse()?),
             ["guilds", id, "widget"] => GuildsIdWidget(id.parse()?),
@@ -204,7 +205,7 @@ impl FromStr for Path {
             ["guilds", id, "roles", _] => GuildsIdRolesId(id.parse()?),
             ["guilds", id, "vanity-url"] => GuildsIdVanityUrl(id.parse()?),
             ["guilds", id, "webhooks"] => GuildsIdWebhooks(id.parse()?),
-            ["invites", _] => InvitesCode,
+            ["invite", _] => InvitesCode,
             ["users", _] => UsersId,
             ["users", _, "connections"] => UsersIdConnections,
             ["users", _, "channels"] => UsersIdChannels,
@@ -1051,7 +1052,7 @@ impl Route {
             }
             Self::GetBan { guild_id, user_id } => (
                 Method::GET,
-                Path::GuildsIdBansId(guild_id),
+                Path::GuildsIdBansUserId(guild_id),
                 format!("guilds/{}/bans/{}", guild_id, user_id).into(),
             ),
             Self::GetBans { guild_id } => (
