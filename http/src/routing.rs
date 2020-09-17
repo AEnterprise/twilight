@@ -205,7 +205,7 @@ impl FromStr for Path {
             ["guilds", id, "roles", _] => GuildsIdRolesId(id.parse()?),
             ["guilds", id, "vanity-url"] => GuildsIdVanityUrl(id.parse()?),
             ["guilds", id, "webhooks"] => GuildsIdWebhooks(id.parse()?),
-            ["invite", _] => InvitesCode,
+            ["invites", _] | ["invite", _] => InvitesCode,
             ["users", _] => UsersId,
             ["users", _, "connections"] => UsersIdConnections,
             ["users", _, "channels"] => UsersIdChannels,
